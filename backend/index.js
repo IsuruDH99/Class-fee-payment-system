@@ -11,8 +11,14 @@ const db = require('./models');
 const LoginRoute = require('./routes/Login')
 app.use('/login', LoginRoute)
 
+const StudentRoute = require('./routes/Student')
+app.use('/student', StudentRoute)
+
+const SubjecttRoute = require('./routes/Subject')
+app.use('/subject', SubjecttRoute)
+
 db.sequelize.sync().then(() => {
-    app.listen(3001, () => {
-        console.log("Server running on port 3001");
+    app.listen(5000, () => {
+        console.log("Server running on port 5000");
     });
 });

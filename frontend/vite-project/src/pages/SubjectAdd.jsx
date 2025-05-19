@@ -15,7 +15,7 @@ const SubjectAdd = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/subject/add-subject",
+        "http://localhost:5000/subject/add-subject",
         {
           subjectCode,
           subjectName,
@@ -55,7 +55,7 @@ const SubjectAdd = () => {
         />
 
         {/* Page title */}
-        <h2 className="text-[28px] font-bold mb-6 text-blue-600 text-center">
+        <h2 className="text-[28px] font-bold mb-6 text-blue-600 text-center pb-8">
           Add Subject
         </h2>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
 
 const Header = () => {
@@ -58,8 +58,9 @@ const Header = () => {
             <li className="relative">
               <NavLink
                 to="/dashboard"
+                style={{ textDecoration: "none" }}
                 className={({ isActive }) =>
-                  `text-base font-semibold transition duration-200 no-underline ${
+                  `text-base font-semibold transition duration-200 ${
                     isActive
                       ? "text-gray-300"
                       : "text-white hover:text-gray-400"
@@ -101,18 +102,17 @@ const Header = () => {
                 </ul>
               )}
             </li>
-            
+
             {/* Calculate class fee */}
             <li className="relative">
-              <div
-                onClick={() => toggleDropdown("work")}
+              <Link
+                to="/fees"
                 className={menuStyle("work")}
+                style={{ textDecoration: "none" }}
               >
                 Calculate Fee <span className="ml-1 text-xs"></span>
-              </div>
-              
+              </Link>
             </li>
-
             {/* Manage Subjects */}
             <li className="relative">
               <div

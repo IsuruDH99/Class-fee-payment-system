@@ -5,9 +5,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const StudentAdd = () => {
-  const [studentName, setStudentName] = useState("");
+  const [name, setName] = useState("");
   const [sid, setSid] = useState("");
-  const [studentGrade, setStudentGrade] = useState(""); // ✅ New state
+  const [grade, setGrade] = useState("");
   const navigate = useNavigate();
 
   const showSuccess = (message) => {
@@ -37,7 +37,7 @@ const StudentAdd = () => {
 
     const sidRegex = /^[0-9]{4}$/;
 
-    if (!studentName || !sid || !studentGrade) {
+    if (!name || !sid || !grade) {
       showError("Please fill in all fields.");
       return;
     } else if (!sidRegex.test(sid)) {
@@ -46,23 +46,25 @@ const StudentAdd = () => {
     }
 
     const newStudent = {
-      name: studentName,
-      sid: sid,
-      grade: studentGrade, // ✅ Corrected key name and variable
+      name,
+      sid,
+      grade
     };
 
     try {
-      await axios.post(
-        "http://localhost:3001/workeradd/add-employee",
-        newStudent
-      );
-      setStudentName("");
+      await axios.post("http://localhost:5000/Student/add-student", newStudent);
+      setName("");
       setSid("");
-      setStudentGrade("");
+      setGrade("");
       showSuccess("Student Added Successfully!");
+     // setTimeout(() => navigate("/studentview"), 1500);
     } catch (error) {
       console.error("Error adding student:", error);
-      showError("Failed to add student. Please try again.");
+      if (error.response && error.response.data.error) {
+        showError(error.response.data.error);
+      } else {
+        showError("Failed to add student. Please try again.");
+      }
     }
   };
 
@@ -95,14 +97,14 @@ const StudentAdd = () => {
 
           {/* Name Field */}
           <div>
-            <label htmlFor="studentName" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Student Name
             </label>
             <input
               type="text"
-              id="studentName"
-              value={studentName}
-              onChange={(e) => setStudentName(e.target.value)}
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
               className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
               placeholder="Enter student name"
@@ -111,14 +113,14 @@ const StudentAdd = () => {
 
           {/* Grade Field */}
           <div>
-            <label htmlFor="studentGrade" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="grade" className="block text-sm font-medium text-gray-700">
               Grade
             </label>
             <input
               type="text"
-              id="studentGrade"
-              value={studentGrade}
-              onChange={(e) => setStudentGrade(e.target.value)}
+              id="grade"
+              value={grade}
+              onChange={(e) => setGrade(e.target.value)}
               required
               className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
               placeholder="Enter student grade (e.g., A, B, 10th)"
@@ -138,7 +140,7 @@ const StudentAdd = () => {
               onClick={() => navigate("/studentview")}
               className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
             >
-              View
+              View Students
             </button>
           </div>
         </form>

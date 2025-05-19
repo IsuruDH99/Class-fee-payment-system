@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import loginImage from "../Images/login.jpg"; // Ensure correct path & casing
 
 const Login = () => {
@@ -9,24 +11,53 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+  // Toast notification functions
+  const showSuccess = (message) => {
+    toast.success(message, {
+      position: "top-center",
+      autoClose: 1200,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const showError = (message) => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 1200,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://192.168.8.111:3001/auth/login", {
+      const response = await axios.post("http://localhost:5000/login/logindata", {
         email,
         password,
       });
       localStorage.setItem("accessToken", response.data.token);
       if (response.status === 200) {
+        showSuccess("Successfully Login");
         setMessage("Login successful!");
         navigate("/dashboard");
       }
     } catch (error) {
       if (error.response) {
-        setMessage(error.response.data.error || "Login failed");
+        const errorMsg = error.response.data.error || "Login failed";
+        setMessage(errorMsg);
+        showError(errorMsg);
       } else {
         setMessage("Server error");
+        showError("Server error");
       }
     }
   };
@@ -107,7 +138,7 @@ const Login = () => {
             onClick={handleSignUp}
             className="mt-4 text-blue-600 text-sm hover:underline w-full text-center"
           >
-            Don’t have an account? Sign Up
+            Don't have an account? Sign Up
           </button>
         </div>
       </div>

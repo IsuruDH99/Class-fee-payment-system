@@ -43,7 +43,7 @@ const Fees = () => {
   const generateAvailableMonths = () => {
     const now = new Date();
     const months = [];
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 3; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const formatted = `${d.toLocaleString("default", {
         month: "long",
@@ -85,59 +85,62 @@ const Fees = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white rounded shadow">
+    <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow ">
       <h2 className="text-2xl font-bold mb-6 text-center">Fees Collection</h2>
 
-      {/* Month Picker */}
-      <div className="mb-6 flex justify-center">
-        <label htmlFor="monthYear" className="text-lg font-medium text-gray-600 mr-2">
-          Select Month:
+      {/* Search Student */}
+      <div className="mb-4 flex items-start gap-2 ml-1">
+        <label className="w-64 text-gray-700 font-medium pt-3 ">
+          Search Student 
         </label>
-        <select
-          id="monthYear"
-          value={selectedMonthYear}
-          onChange={(e) => setSelectedMonthYear(e.target.value)}
-          className="border rounded-lg p-2 text-gray-700"
-        >
-          {availableMonths.map((monthYear) => (
-            <option key={monthYear} value={monthYear}>
-              {monthYear}
-            </option>
-          ))}
-        </select>
+        <div className="flex-1">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-48 p-2 border rounded  "
+          />
+          {filteredStudents.length > 0 && (
+            <ul className="border mt-1 max-h-48 overflow-y-auto rounded">
+              {filteredStudents.map((student) => (
+                <li
+                  key={student.id}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setSelectedStudent(student);
+                    setSearchTerm(`${student.id} - ${student.name}`);
+                  }}
+                >
+                  {student.id} - {student.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
-      {/* Student Picker */}
-      <div className="mb-6">
-        <label className="block mb-2 text-gray-700">Search Student by ID or Name:</label>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        {filteredStudents.length > 0 && (
-          <ul className="border mt-1 max-h-48 overflow-y-auto rounded">
-            {filteredStudents.map((student) => (
-              <li
-                key={student.id}
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => {
-                  setSelectedStudent(student);
-                  setSearchTerm(`${student.id} - ${student.name}`);
-                }}
-              >
-                {student.id} - {student.name}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {/* Select Month */}
+      <div className="mb-8 flex items-center gap-4 ml-16">
+  <label className="w-32 text-gray-700 font-medium">Select Month:</label>
+  <select
+    id="monthYear"
+    value={selectedMonthYear}
+    onChange={(e) => setSelectedMonthYear(e.target.value)}
+    className="w-40 border rounded-lg p-1.5 text-gray-700"
+  >
+    {availableMonths.map((monthYear) => (
+      <option key={monthYear} value={monthYear}>
+        {monthYear}
+      </option>
+    ))}
+  </select>
+</div>
 
-      {/* Subject Checkboxes */}
-      <div className="mb-6">
-        <label className="block mb-2 font-medium text-gray-700">Select Subjects:</label>
-        <div className="grid grid-cols-2 gap-2">
+
+      {/* Select Subjects */}
+      <div className="mb-4 flex gap-4 ml-1">
+        <label className="w-64 text-gray-700 font-medium pt-2">Select Subjects:</label>
+        <div className="grid grid-cols-2 gap-2 flex-1">
           {subjects.map((subject) => (
             <label key={subject.subjectCode} className="flex items-center gap-2">
               <input
@@ -152,7 +155,7 @@ const Fees = () => {
       </div>
 
       {/* Total Fee */}
-      <div className="mb-6 text-lg font-semibold text-center">
+      <div className="mb-6 text-lg font-semibold text-center px-4 py-2 rounded bg-blue-500">
         Total Fee: Rs. {totalFee}
       </div>
 
@@ -203,6 +206,9 @@ const Fees = () => {
             </li>
           ))}
         </ul>
+        <div className="mt-4 font-bold">
+           <p >Total Fee: Rs. {totalFee}</p>
+        </div>
         <p className="mt-4 font-bold">Total Fee: Rs. {totalFee}</p>
         <div className="text-center mt-6">
           <button

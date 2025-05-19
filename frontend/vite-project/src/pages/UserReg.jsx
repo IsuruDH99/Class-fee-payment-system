@@ -48,7 +48,7 @@ const UserReg = () => {
           setFormData({ name: '', email: '', password: '' });
 
           setTimeout(() => {
-            navigate('/header');
+            navigate('/Login');
           }, 1000);
         } else {
           alert(data.message || 'Registration failed');

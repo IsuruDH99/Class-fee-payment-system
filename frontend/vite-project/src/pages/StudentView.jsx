@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Modal, Button } from "react-bootstrap"; // Ensure these are installed and imported
+import { Modal, Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,7 +14,7 @@ const Studentview = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/workeradd/get-workers");
+        const response = await axios.get("http://localhost:5000/Student/get-students");
         setStudents(response.data);
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -32,8 +32,9 @@ const Studentview = () => {
   const handleDelete = async () => {
     if (!selectedStudent) return;
     try {
-      await axios.delete(`http://localhost:3001/workeradd/delete-worker/${selectedStudent.epf}`);
-      setStudents((prev) => prev.filter((s) => s.epf !== selectedStudent.epf));
+     
+      await axios.delete(`http://localhost:5000/Student/delete-student/${selectedStudent.sid}`);
+      setStudents((prev) => prev.filter((s) => s.sid !== selectedStudent.sid));
       toast.success("Student successfully deleted!");
     } catch (error) {
       console.error("Error deleting student:", error);
@@ -56,23 +57,20 @@ const Studentview = () => {
         style={{ marginTop: "65px" }}
       />
 
-      {/* Title */}
       <h6 className="text-[32px] font-semibold text-center text-gray-700 mb-8">
         Student Records
       </h6>
 
-      {/* Back Button */}
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between mb-4">
         <button
           type="button"
           onClick={() => navigate("/StudentAdd")}
-          className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
         >
-          Back
+          Add New Student
         </button>
       </div>
 
-      {/* Student Table */}
       <div className="relative overflow-x-auto rounded-lg shadow border border-gray-200 bg-white">
         <table className="w-full text-sm text-left text-black">
           <thead className="text-xm text-black uppercase bg-indigo-500">
@@ -87,12 +85,12 @@ const Studentview = () => {
             {students.length > 0 ? (
               students.map((student) => (
                 <tr
-                  key={student.epf}
+                  key={student.sid}
                   className="bg-white border-b hover:bg-gray-50 text-center transition duration-150"
                 >
-                  <td className="px-6 py-3 text-base">{student.epf}</td>
-                  <td className="px-6 py-3 text-base">{student.name}</td>
-                  <td className="px-6 py-3 text-base">{student.grade}</td>
+                  <td className="px-6 py-3 text-base">{student.sid}</td>
+                  <td className="px-6 py-3 text-base">{student.studentName}</td>
+                  <td className="px-6 py-3 text-base">{student.studentGrade}</td>
                   <td className="px-6 py-3">
                     <button
                       onClick={() => confirmDelete(student)}
@@ -111,17 +109,17 @@ const Studentview = () => {
               </tr>
             )}
           </tbody>
+         
         </table>
       </div>
 
-      {/* Delete Confirmation Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered size="sm">
         <Modal.Header closeButton className="py-2">
           <Modal.Title className="text-sm">Confirm Delete</Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-xs">
           Are you sure you want to delete{" "}
-          <span className="font-bold">{selectedStudent?.name}</span>?
+          <span className="font-bold">{selectedStudent?.name}</span> (ID: {selectedStudent?.sid})?
         </Modal.Body>
         <Modal.Footer className="py-2">
           <Button variant="secondary" size="sm" onClick={() => setShowModal(false)}>
