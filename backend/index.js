@@ -14,8 +14,12 @@ app.use('/login', LoginRoute)
 const StudentRoute = require('./routes/Student')
 app.use('/student', StudentRoute)
 
-const SubjecttRoute = require('./routes/Subject')
-app.use('/subject', SubjecttRoute)
+const SubjectRoute = require('./routes/Subject')
+app.use('/subject', SubjectRoute)
+
+const FeeRecordRoute = require('./routes/FeeRecord');
+app.use('/feerecord', FeeRecordRoute)
+
 
 db.sequelize.sync().then(() => {
     app.listen(5000, () => {
